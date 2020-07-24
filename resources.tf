@@ -16,7 +16,7 @@ resource "aws_kms_key" "symphony_key" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_kms_alias" "symphony_key" {
   name          = "alias/symphony-non-prod-key"
-  target_key_id = "${aws_kms_key.a.key_id}"
+  target_key_id = aws_kms_key.symphony_key.key_id
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
