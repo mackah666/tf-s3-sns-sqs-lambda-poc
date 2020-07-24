@@ -6,16 +6,17 @@ The original post can be found [here](https://christiangiacomi.com/posts/terrafo
 
 ## Architecture
 
-SNS --> SQS --> LAMBDA
+S3 --> SNS --> SQS --> LAMBDA
 
 
 ## Description
 
-The code creates three resources:
+The code creates four main resources:
 
-1) An SNS topic
-2) An SQS queue which subscribes to the SNS topic
-3) A Lambda function which subscribes to the SQS queue
+1) An S3 bucket that notifies the SNS topic
+2) An SNS topic
+3) An SQS queue which subscribes to the SNS topic
+4) A Lambda function which subscribes to the SQS queue
 
 
 Please note that the code is NOT production ready and is only meant as an example.

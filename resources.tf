@@ -5,6 +5,7 @@
 resource "aws_kms_key" "symphony_key" {
   description             = "KMS key Symphony non prod environments"
   # deletion_window_in_days = 10
+
   tags = {
     Name = "Symphony Key"
     Environment = "Non Prod"
@@ -24,6 +25,16 @@ resource "aws_kms_alias" "symphony_key" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "bucket" {
   bucket = "symphony-bucket-0001"
+  acl    = "private"
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = aws_kms_key.symphony_key.arn
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
   tags = {
     Name = "Symphony S3 Bucket"
     Environment = "Non Prod"
