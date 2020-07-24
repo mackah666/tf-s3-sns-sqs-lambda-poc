@@ -56,7 +56,7 @@ POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.bucket.id
-  
+
   topic {
     topic_arn     = aws_sns_topic.symphony_updates.arn
     events        = ["s3:ObjectCreated:*"]
@@ -198,7 +198,7 @@ resource "aws_lambda_function" "symphony_updates_lambda" {
     function_name    = "symphony_example"
     role             = aws_iam_role.lambda_role.arn
     handler          = "example.handler"
-    source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
+    source_code_hash = data.archive_file.lambda_zip.output_base64sha256
     runtime          = "nodejs12.x"
 
     environment {
