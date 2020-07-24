@@ -34,10 +34,10 @@ POLICY
 # S3 BUCKET TOPIC NOTIFICATION
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = "${aws_s3_bucket.bucket.id}"
+  bucket = aws_s3_bucket.bucket.id
 
   topic {
-    topic_arn     = "${aws_sns_topic.symphony_updates.arn}"
+    topic_arn     = aws_sns_topic.symphony_updates.arn
     events        = ["s3:ObjectCreated:*"]
     filter_suffix = ".json"
   }
@@ -67,7 +67,7 @@ resource "aws_sqs_queue" "symphony_updates_dl_queue" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_sqs_queue_policy" "symphony_updates_queue_policy" {
-    queue_url = "${aws_sqs_queue.symphony_updates_queue.id}"
+    queue_url = aws_sqs_queue.symphony_updates_queue.id
 
     policy = <<POLICY
 {
@@ -96,9 +96,9 @@ POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_sns_topic_subscription" "symphony_updates_sqs_target" {
-    topic_arn = "${aws_sns_topic.symphony_updates.arn}"
+    topic_arn = aws_sns_topic.symphony_updates.arn
     protocol  = "sqs"
-    endpoint  = "${aws_sqs_queue.symphony_updates_queue.arn}"
+    endpoint  = aws_sqs_queue.symphony_updates_queue.arn
 }
 
 
@@ -127,7 +127,7 @@ EOF
 
 resource "aws_iam_role_policy" "lambda_role_logs_policy" {
     name = "LambdaRolePolicy"
-    role = "${aws_iam_role.lambda_role.id}"
+    role = aws_iam_role.lambda_role.id
     policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -148,7 +148,7 @@ EOF
 
 resource "aws_iam_role_policy" "lambda_role_sqs_policy" {
     name = "AllowSQSPermissions"
-    role = "${aws_iam_role.lambda_role.id}"
+    role = aws_iam_role.lambda_role.id
     policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -175,7 +175,7 @@ EOF
 resource "aws_lambda_function" "symphony_updates_lambda" {
     filename         = "${path.module}/lambda/example.zip"
     function_name    = "symphony_example"
-    role             = "${aws_iam_role.lambda_role.arn}"
+    role             = aws_iam_role.lambda_role.arn
     handler          = "example.handler"
     source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
     runtime          = "nodejs12.x"
@@ -192,8 +192,8 @@ resource "aws_lambda_function" "symphony_updates_lambda" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_lambda_event_source_mapping" "symphony_updates_lambda_event_source" {
-    event_source_arn = "${aws_sqs_queue.symphony_updates_queue.arn}"
+    event_source_arn = aws_sqs_queue.symphony_updates_queue.arn
     enabled          = true
-    function_name    = "${aws_lambda_function.symphony_updates_lambda.arn}"
+    function_name    = aws_lambda_function.symphony_updates_lambda.arn
     batch_size       = 1
 }
