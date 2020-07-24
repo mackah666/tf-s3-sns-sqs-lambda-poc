@@ -27,6 +27,8 @@ resource "aws_s3_bucket" "bucket" {
   bucket = "symphony-bucket-0001"
   acl    = "private"
 
+  force_destroy = true
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -80,8 +82,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
   topic {
     topic_arn     = aws_sns_topic.symphony_updates.arn
-    events        = ["s3:ObjectCreated:*"]
-    filter_suffix = ".json"
+    events        = ["s3:ObjectCreated:Put"]
   }
 }
 
