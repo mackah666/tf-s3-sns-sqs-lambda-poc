@@ -1,4 +1,4 @@
-# Terraform SNS to SQS to Lambda
+# Terraform S3 to SNS to SQS to Lambda
 
 The following is an AWS infrastructure as code tutorial using Terraform.
 

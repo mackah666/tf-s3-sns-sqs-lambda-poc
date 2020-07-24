@@ -46,6 +46,8 @@ resource "aws_s3_bucket" "bucket" {
 
 resource "aws_sns_topic" "symphony_updates" {
     name = "symphony-updates-topic"
+    kms_master_key_id = aws_kms_key.symphony_key.arn
+
 
     tags = {
     Name = "Symphony Topic"
@@ -100,6 +102,7 @@ resource "aws_sqs_queue" "symphony_updates_queue" {
 
 resource "aws_sqs_queue" "symphony_updates_dl_queue" {
     name = "symphony-updates-dl-queue"
+    kms_master_key_id = aws_kms_key.symphony_key.arn
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
