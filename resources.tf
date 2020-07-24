@@ -1,9 +1,25 @@
+# ---------------------------------------------------------------------------------------------------------------------
+# S3 BUCKET
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_kms_key" "symphony_key" {
+  description             = "KMS key 1"
+  # deletion_window_in_days = 10
+  tags = {
+    Name = "Symphony Key"
+    Environment = "Non Prod"
+  }
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "bucket" {
   bucket = "symphony-bucket-0001"
+  tags = {
+    Name = "Symphony S3 Bucket"
+    Environment = "Non Prod"
+  }
 }
 # ---------------------------------------------------------------------------------------------------------------------
 # SNS TOPIC
@@ -11,6 +27,11 @@ resource "aws_s3_bucket" "bucket" {
 
 resource "aws_sns_topic" "symphony_updates" {
     name = "symphony-updates-topic"
+
+    tags = {
+    Name = "Symphony Topic"
+    Environment = "Non Prod"
+  }
 
     policy = <<POLICY
 {
@@ -36,6 +57,11 @@ POLICY
 resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.bucket.id
 
+  tags = {
+    Name = "S3 Bucket Notification"
+    Environment = "Non Prod"
+  }
+
   topic {
     topic_arn     = aws_sns_topic.symphony_updates.arn
     events        = ["s3:ObjectCreated:*"]
@@ -53,7 +79,7 @@ resource "aws_sqs_queue" "symphony_updates_queue" {
     visibility_timeout_seconds = 300
 
     tags = {
-        Environment = "dev"
+        Environment = "Non Prod"
     }
 }
 
