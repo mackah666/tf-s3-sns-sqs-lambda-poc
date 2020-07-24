@@ -56,12 +56,7 @@ POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.bucket.id
-
-  tags = {
-    Name = "S3 Bucket Notification"
-    Environment = "Non Prod"
-  }
-
+  
   topic {
     topic_arn     = aws_sns_topic.symphony_updates.arn
     events        = ["s3:ObjectCreated:*"]
